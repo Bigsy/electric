@@ -4,7 +4,7 @@
             [clojure.java.shell :as sh]
             [deps-deploy.deps-deploy :as dd]))
 
-(def lib 'com.hyperfiddle/electric)
+(def lib 'org.clojars.bigsy/electric)
 (def version (b/git-process {:git-args "describe --tags --long --always --dirty"}))
 (def basis (b/create-basis {:project "deps.edn"}))
 

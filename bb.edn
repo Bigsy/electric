@@ -1,0 +1,14 @@
+{:tasks
+ {:requires ([clojure.string :as str])
+
+  release
+  {:doc "Tag and deploy to Clojars (version from git describe)"
+   :task (let [version (-> (shell {:out :string} "git" "describe" "--tags" "--long" "--match" "v2-alpha")
+                           :out
+                           str/trim)]
+           (println "Releasing:" version)
+           (shell "git" "tag" version)
+           (shell "git" "push" "origin" version)
+           (shell "clojure" "-T:build" "jar" ":version" (pr-str version))
+           (shell "clojure" "-T:build" "deploy" ":version" (pr-str version))
+           (println "Done:" version))}}}
