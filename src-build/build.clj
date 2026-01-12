@@ -8,7 +8,9 @@
             :basis (b/create-basis {:project "deps.edn"})
             :javac-opts ["-source" "8" "-target" "8"]}))
 
-(def defaults {:src-pom "pom.xml" :lib 'com.hyperfiddle/electric})
+(def defaults
+  {:lib 'org.clojars.bigsy/electric
+   :src-pom "pom.xml"})
 
 (defn clean [opts]
   (bb/clean opts))
