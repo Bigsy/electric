@@ -1,8 +1,14 @@
+# Electric Clojure v2
+
+> **This is a fork of Electric Clojure v2-alpha.**
+
+---
+
 # Electric Clojure – a reactive DSL for full-stack web development, with compiler-managed frontend/backend network sync
 
 `com.hyperfiddle/electric {:mvn/version "v2-alpha-540-ga4699532"}` · 2024 Jan 10 · [Changelog](CHANGELOG.md)
 
-> [!NOTE]  
+> [!NOTE]
 > Electric v3 is nearly here! Request early access here: https://www.hyperfiddle.net/early-access.html
 
 Electric is a **reactive and network-aware Clojure/Script DSL** that fully abstracts over client/server state sync at the programming language layer, in order to achieve **strong composition** across the frontend/backend boundary in dynamic web apps. With Electric, backend expressions (i.e. queries) and frontend expressions (i.e. views) compose directly. There is no incidental network divide. The Electric macros will, at compile time, perform deep graph analysis of your hollistic program's data flow in order to transparently partition and distribute it across the client/server distributed system. There is no client/server dichotomy from the programmer's perspective. All IO and effects are managed.
@@ -35,7 +41,7 @@ Our mission is to raise the abstraction ceiling in web development in the same w
 - "I can't imagine building this UI without electric, it would have been so messy"
 - "Pretty new to Electric ... the low LOC for expressing ideas [in Electric] is mind-boggling"
 - "I'm on project three with Electric and have never had so much fun and productivity building web apps"
-- "I’ve gone from I can’t build that.. to building a large chunk of functionality in a day with Electric"
+- "I've gone from I can't build that.. to building a large chunk of functionality in a day with Electric"
 - "This is a paradigm shift similar to garbage collection"
 - "The approach is a breath of fresh air in what appears like a stagnating swamp"
 - "Truly 10x, 100x piece of tech"
@@ -44,7 +50,7 @@ Our mission is to raise the abstraction ceiling in web development in the same w
 # Tutorial and live examples
 
 - [Electric v2 tutorial repo](https://github.com/hyperfiddle/electric-v2-tutorial)
-- [Electric v2 starter app](https://github.com/hyperfiddle/electric-v2-starter-app) – minimalist entrypoint
+- [Electric v2 starter app](https://github.com/hyperfiddle/electric-v2-starter-app) – minimalist entrypoint
 - [Electric v2 datomic browser](https://github.com/hyperfiddle/electric-datomic-browser)
 
 # Documentation

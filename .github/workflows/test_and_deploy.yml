@@ -10,7 +10,7 @@ jobs:
     runs-on: [ubuntu-latest]
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v4
 
     - run: git status
 
@@ -20,7 +20,7 @@ jobs:
         java-version: '11'
 
     - name: Cache local Maven repository
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
          path: ~/.m2/repository
          key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
@@ -28,7 +28,7 @@ jobs:
            ${{ runner.os }}-maven-
 
     - name: Install clojure tools
-      uses: DeLaGuardo/setup-clojure@12.1
+      uses: DeLaGuardo/setup-clojure@12.5
       with:
         cli: 1.11.1.1113
 
@@ -41,7 +41,7 @@ jobs:
     timeout-minutes: 5
     steps:
 
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v4
 
     - run: git status
 
@@ -51,7 +51,7 @@ jobs:
         java-version: '11'
 
     - name: Cache local Maven repository
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
          path: ~/.m2/repository
          key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
@@ -59,25 +59,23 @@ jobs:
            ${{ runner.os }}-maven-
 
     - name: Install clojure tools
-      uses: DeLaGuardo/setup-clojure@12.1
+      uses: DeLaGuardo/setup-clojure@12.5
       with:
         cli: 1.11.1.1113
 
     - name: Use Node.js
-      uses: actions/setup-node@v4.0.1
+      uses: actions/setup-node@v4
       with:
         node-version: 18.x
 
     - name: NPM install
       run: npm install --include=dev
 
-    # Install chrome and dependencies, puppeteer fails otherwise
-    - run: sudo apt-get update && sudo apt-get install -y wget gnupg
-    - run: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    - run: sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-    - run: sudo apt-get update && sudo apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends
-    # - run: rm -rf /var/lib/apt/lists/*
+    - name: Install Shadow
+      run: npm install shadow-cljs
 
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1
 
     - name: Run Tests
       run: ./ci/run_tests_browser.sh
@@ -87,7 +85,7 @@ jobs:
     runs-on: [ubuntu-latest]
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v4
 
     - run: git status
 
@@ -97,7 +95,7 @@ jobs:
         java-version: '11'
 
     - name: Cache local Maven repository
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
          path: ~/.m2/repository
          key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
@@ -105,12 +103,12 @@ jobs:
            ${{ runner.os }}-maven-
 
     - name: Install clojure tools
-      uses: DeLaGuardo/setup-clojure@12.1
+      uses: DeLaGuardo/setup-clojure@12.5
       with:
         cli: 1.11.1.1113
 
     - name: Use Node.js
-      uses: actions/setup-node@v4.0.1
+      uses: actions/setup-node@v4
       with:
         node-version: 18.x
 
