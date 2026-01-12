@@ -1,3 +1,9 @@
+# Electric Clojure v2
+
+> **This is a fork of Electric Clojure v2-alpha.**
+
+---
+
 # Electric Clojure – a signals DSL for fullstack web UI, with compiler-managed network sync
 
 Electric (formerly known as Photon) is a **reactive and network-aware Clojure/Script DSL** that fully abstracts over client/server data sync at the programming language layer, in order to achieve **strong composition** across the frontend/backend boundary in dynamic web apps. With Electric, backend expressions (i.e. queries) and frontend expressions (i.e. views) compose directly. There is no artificial network divide. The Electric macros will, at compile time, perform deep graph analysis of your unified program's data flow in order to transparently partition and distribute it across the client/server distributed system. There is no client/server dichotomy from the programmer's perspective. All IO and effects are managed.
