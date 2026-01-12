@@ -2,6 +2,8 @@
 
 > **This is a fork of Electric Clojure v2-alpha.**
 
+[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.bigsy/electric.svg)](https://clojars.org/org.clojars.bigsy/electric)
+
 ---
 
 # Electric Clojure – a signals DSL for fullstack web UI, with compiler-managed network sync
