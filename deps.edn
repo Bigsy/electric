@@ -4,19 +4,23 @@
         com.cognitect/transit-cljs {:mvn/version "0.8.269"}
         com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
         datascript/datascript {:mvn/version "1.3.14"}
-        info.sunng/ring-jetty9-adapter {:mvn/version "0.14.3"
-                                        ;; "0.14.3" (Jetty 9) is Java 8 compatible;
-                                        ;; "0.17.7" (Jetty 10) is NOT Java 8 compatible
+        info.sunng/ring-jetty9-adapter {:mvn/version "0.39.1"
+                                        ;; 0.39.1 uses Jetty 12, requires Java 17+
+                                        ;; Upgraded from 0.14.3 to fix HIGH severity CVEs
                                         :exclusions [org.slf4j/slf4j-api
-                                                     info.sunng/ring-jetty9-adapter-http3]} ; no need
+                                                     info.sunng/ring-jetty9-adapter-http3]}
         missionary/missionary {:mvn/version "b.27-SNAPSHOT"}
         nubank/matcher-combinators {:mvn/version "3.5.1"}
-        org.clojure/clojure {:mvn/version "1.11.1"}
-        org.clojure/clojurescript {:mvn/version "1.11.60"}
+        org.clojure/clojure {:mvn/version "1.12.4"}
+        org.clojure/clojurescript {:mvn/version "1.12.134"}
         org.clojure/core.async {:mvn/version "1.5.648"} ; for interop helpers only
         org.clojure/tools.analyzer.jvm {:mvn/version "1.2.2"} ;; used by Electric
         org.clojure/tools.logging {:mvn/version "1.2.4"}
-        ring-basic-authentication/ring-basic-authentication {:mvn/version "1.1.1"}}
+        ring-basic-authentication/ring-basic-authentication {:mvn/version "1.1.1"}
+        ;; Explicit guava to fix CVE-2023-2976 (HIGH)
+        com.google.guava/guava {:mvn/version "33.4.8-jre"}
+        ;; Explicit jackson-core to fix CVE-2018-1000873 (MEDIUM)
+        com.fasterxml.jackson.core/jackson-core {:mvn/version "2.18.3"}}
 
  :aliases {:legacy {:extra-paths ["src-legacy"]}
            :build {:paths ["src-build"] ; no project classpath including user.clj and data_readers
@@ -27,7 +31,7 @@
                      :extra-deps  {com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.0.2"}
                                    criterium/criterium                      {:mvn/version "0.4.6"}
                                    binaryage/devtools                       {:mvn/version "1.0.6"}
-                                   thheller/shadow-cljs                     {:mvn/version "2.20.1"}
+                                   thheller/shadow-cljs                     {:mvn/version "3.3.4"}
                                    ch.qos.logback/logback-classic {:mvn/version "1.2.11"}}
                      :jvm-opts    ["-Xss2m"                 ; https://github.com/hyperfiddle/electric/issues/11
                                    "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"
@@ -49,7 +53,7 @@
                      :extra-deps {nextjournal/clojure-mode {:git/url "https://github.com/nextjournal/clojure-mode" ; clojure codemirror support
                                                             :sha "699a445ebf2767f41fd0b6eeed5a008511702be6"}
                                   com.datomic/dev-local {:mvn/version "1.0.243"}
-                                  com.google.guava/guava {:mvn/version "31.1-jre"}}} ; fix conflict - datomic cloud & shadow
+                                  com.google.guava/guava {:mvn/version "33.4.8-jre"}}} ; fix conflict & CVE-2023-2976
            :datomic-free {:extra-deps {com.datomic/datomic-free {:mvn/version "0.9.5656" :exclusions [org.slf4j/slf4j-nop com.google.guava/guava]}}}
            :datomic-pro {:extra-deps {com.datomic/datomic-pro {:mvn/version "1.0.6527" :exclusions [org.slf4j/slf4j-nop]}}}}
 
