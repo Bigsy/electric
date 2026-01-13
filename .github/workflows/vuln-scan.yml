@@ -33,7 +33,7 @@ jobs:
           cli: latest
 
       - name: Generate pom.xml from deps.edn
-        run: clojure -Spom
+        run: clojure -Srepro -Spom
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
