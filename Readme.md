@@ -1,6 +1,6 @@
 # Electric Clojure v2
 
-> **This is a fork of Electric Clojure v2-alpha.**
+> **This is a fork of Electric Clojure v2-alpha with some security fixes**
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.bigsy/electric.svg)](https://clojars.org/org.clojars.bigsy/electric)
 
