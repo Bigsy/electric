@@ -4,9 +4,15 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (leave blank to use `git describe --tags --long --always`)'
+        required: false
+        type: string
 
 permissions:
-  contents: read
+  contents: write  # manual runs push a git tag matching the released version
 
 jobs:
   release:
@@ -16,6 +22,25 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # full history so git describe / tags resolve
+
+      - name: Resolve version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            version="${{ github.ref_name }}"
+          elif [ -n "$INPUT_VERSION" ]; then
+            version="$INPUT_VERSION"
+          else
+            version="$(git describe --tags --long --always)"
+          fi
+          case "$version" in
+            v*) ;;
+            *) echo "Version '$version' must start with 'v'"; exit 1 ;;
+          esac
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Releasing $version"
 
       - uses: actions/setup-java@v5
         with:
@@ -39,10 +64,21 @@ jobs:
         run: ./ci/run_tests_jvm.sh
 
       - name: Build jar
-        run: clojure -T:build jar :version '"${{ github.ref_name }}"'
+        run: clojure -T:build jar :version '"${{ steps.version.outputs.version }}"'
 
       - name: Deploy to Clojars
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
-        run: clojure -T:build deploy :version '"${{ github.ref_name }}"'
+        run: clojure -T:build deploy :version '"${{ steps.version.outputs.version }}"'
+
+      - name: Tag release (manual runs only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          if git rev-parse -q --verify "refs/tags/$version" >/dev/null; then
+            echo "Tag $version already exists, skipping"
+          else
+            git tag "$version"
+            git push origin "$version"
+          fi

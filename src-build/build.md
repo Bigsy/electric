@@ -53,7 +53,7 @@ The above warning is expected and can be ignored.
 
 # Automated release (GitHub Actions)
 
-Pushing a tag matching `v*` runs `.github/workflows/release.yml`, which runs the JVM
+Pushing a tag matching `v*` (or running the workflow manually from the Actions tab) runs `.github/workflows/release.yml`, which runs the JVM
 tests, builds the jar with the tag name as the version, and deploys to Clojars using
 the `CLOJARS_USERNAME` / `CLOJARS_PASSWORD` repository secrets.
 
@@ -61,3 +61,7 @@ the `CLOJARS_USERNAME` / `CLOJARS_PASSWORD` repository secrets.
 git tag $(git describe --tags --long --always)   # e.g. v2-alpha-556-g03ec52b0
 git push origin --tags
 ```
+
+Manual runs (`gh workflow run release.yml -R Bigsy/electric`) accept an optional `version`
+input; when blank the version is derived from `git describe` on the selected branch, and the
+workflow pushes a matching git tag after a successful deploy.
