@@ -1,0 +1,48 @@
+name: Release to Clojars
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # full history so git describe / tags resolve
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@13.5
+        with:
+          cli: 1.12.4.1582
+
+      - name: Run JVM tests
+        run: ./ci/run_tests_jvm.sh
+
+      - name: Build jar
+        run: clojure -T:build jar :version '"${{ github.ref_name }}"'
+
+      - name: Deploy to Clojars
+        env:
+          CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+          CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+        run: clojure -T:build deploy :version '"${{ github.ref_name }}"'

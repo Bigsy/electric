@@ -50,3 +50,14 @@ $ clojure -T:build compile-java
 warning: [options] bootstrap class path not set in conjunction with -source 8
 ```
 The above warning is expected and can be ignored.
+
+# Automated release (GitHub Actions)
+
+Pushing a tag matching `v*` runs `.github/workflows/release.yml`, which runs the JVM
+tests, builds the jar with the tag name as the version, and deploys to Clojars using
+the `CLOJARS_USERNAME` / `CLOJARS_PASSWORD` repository secrets.
+
+```shell
+git tag $(git describe --tags --long --always)   # e.g. v2-alpha-556-g03ec52b0
+git push origin --tags
+```
