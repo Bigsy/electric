@@ -58,10 +58,10 @@ tests, builds the jar with the tag name as the version, and deploys to Clojars u
 the `CLOJARS_USERNAME` / `CLOJARS_PASSWORD` repository secrets.
 
 ```shell
-git tag $(git describe --tags --long --always)   # e.g. v2-alpha-556-g03ec52b0
+git tag v2-alpha-<n>-g$(git rev-parse --short=8 HEAD)   # n = previous n + commits since; or just run the workflow manually
 git push origin --tags
 ```
 
 Manual runs (`gh workflow run release.yml -R Bigsy/electric`) accept an optional `version`
-input; when blank the version is derived from `git describe` on the selected branch, and the
+input; when blank the next version is computed from the latest `v*-<n>-g<sha>` tag plus the number of commits since it (a plain `git describe` would compound suffixes because the tags already carry one), and the
 workflow pushes a matching git tag after a successful deploy.

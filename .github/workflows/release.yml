@@ -33,12 +33,18 @@ jobs:
           elif [ -n "$INPUT_VERSION" ]; then
             version="$INPUT_VERSION"
           else
-            version="$(git describe --tags --long --always)"
+            # Existing tags are already in describe format (v2-alpha-<n>-g<sha>), so a plain
+            # `git describe` would compound suffixes. Continue the scheme arithmetically instead.
+            latest="$(git describe --tags --abbrev=0 --match 'v*-*-g*')"
+            base="${latest%-*-g*}"                     # v2-alpha
+            n="${latest#"$base"-}"; n="${n%%-*}"        # 554
+            count="$(git rev-list --count "$latest..HEAD")"
+            version="$base-$((n + count))-g$(git rev-parse --short=8 HEAD)"
           fi
-          case "$version" in
-            v*) ;;
-            *) echo "Version '$version' must start with 'v'"; exit 1 ;;
-          esac
+          if ! printf '%s' "$version" | grep -Eq '^v[0-9]+-(alpha|beta|rc)-[0-9]+-g[0-9a-f]{7,}$'; then
+            echo "Version '$version' does not match v<major>-<maturity>-<n>-g<sha> (e.g. v2-alpha-554-g3b028b1e)"
+            exit 1
+          fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Releasing $version"
 
@@ -76,7 +82,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           version="${{ steps.version.outputs.version }}"
-          if git rev-parse -q --verify "refs/tags/$version" >/dev/null; then
+          if git show-ref --verify -q "refs/tags/$version"; then
             echo "Tag $version already exists, skipping"
           else
             git tag "$version"
